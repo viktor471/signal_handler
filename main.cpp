@@ -72,6 +72,11 @@ public:
     return _object;
   }
 
+Handler operator[]( Services::Handler_number number )
+{
+  return *_handlers.find( number );
+}
+
 };
 
 Handlers* Handlers::_object = nullptr;
