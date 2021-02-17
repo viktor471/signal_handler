@@ -92,6 +92,7 @@ private:
 public:
 
   void setHandler( Handler _handler );
+  Signal_handler( sighandler_t cur_action_ = nullptr , Signum sign_ = SIGINT );
   sighandler_t call_signal();
   sighandler_t getCurAction();
   sighandler_t getOldAction();
@@ -109,6 +110,11 @@ int main(int argc, char *argv[])
 }
 
 sighandler_t SignalHandler::getCurAction()
+Signal_handler::Signal_handler(sighandler_t cur_action_, Signum sign_ ) :
+  _old_action( nullptr ),
+  _cur_action( cur_action_ ),
+  _signal( sign_ ) { }
+
 {
   return cur_action;
 }
