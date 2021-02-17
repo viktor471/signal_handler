@@ -85,9 +85,9 @@ class Signal_handler
 {
 private:
 
-  sighandler_t old_action;
-  sighandler_t cur_action;
-  Signum       signal;
+  sighandler_t _old_action;
+  sighandler_t _cur_action;
+  Signum       _signal;
 
 public:
 
