@@ -91,7 +91,6 @@ private:
 
 public:
 
-  void setHandler( Handler _handler );
   Signal_handler( sighandler_t cur_action_ = nullptr , Signum sign_ = SIGINT );
   sighandler_t call_signal();
   sighandler_t getCurAction();
