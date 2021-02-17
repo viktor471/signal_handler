@@ -26,27 +26,57 @@ namespace Services {
   }
 
 }
+
 class Handlers{
 
   typedef QMap< Services::Handler_number, Handler > Handlers_map;
   Handlers_map _handlers;
+
+  static Handlers* _object;
+  Handlers( Handlers& other )      = delete;
+
+  Handlers(){
 
     using namespace Services;
 
     _sig_names.insert( SIG_INT, "SIGINT" );
     _sig_names.insert( SIG_FPE, "SIGFPE" );
 
-    for( quint16 i = 0; i < _sig_names.size(); i++ )
-    _handlers.insert( SIG_INT, []( int _signum ) -> void {
-      HandlerNumber handler = static_cast< HandlerNumber >( _signum );
-        qDebug() << _sig_names[handler]
-                 << ", sig number: "
-                 << _signum;
-    } );
+    for(
+        SigNames_map::Iterator it = _sig_names.begin();
+        it != _sig_names.end();
+        it++
+    )
+      _handlers.insert(
+          it.key(),
+          []( int _signum ) -> void {
+
+          Handler_number handler = get_signal_number( _signum );
+
+          qDebug()  << _sig_names[ handler ]
+                    << ", sig number: "
+                    << _signum;
+          }
+      );
   }
+
+ void operator=(const Handlers& ) = delete;
+
+public:
+
+  static Handlers* get_instance()
+  {
+    if( _object == nullptr )
+      _object = new Handlers;
+
+    return _object;
+  }
+
 };
 
-class SignalHandler
+Handlers* Handlers::_object = nullptr;
+
+class Signal_handler
 {
 private:
 
