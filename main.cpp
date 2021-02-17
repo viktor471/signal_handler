@@ -93,45 +93,82 @@ public:
 
   Signal_handler( sighandler_t cur_action_ = nullptr , Signum sign_ = SIGINT );
   sighandler_t call_signal();
-  sighandler_t getCurAction();
-  sighandler_t getOldAction();
-  sighandler_t setNewAction( sighandler_t action  );
-  Signum       setNewSignal( Signum       signum_ );
-  Signum       getSignal();
+  sighandler_t get_current_action();
+  sighandler_t get_old_action();
+  sighandler_t set_new_action( sighandler_t action  );
+  Signum       set_new_signal( Signum       signum_ );
+  Signum       get_signal();
 
 };
 
-int main(int argc, char *argv[])
+int main()
 {
-  QCoreApplication a(argc, argv);
+  Signal_handler handler;
+  Handlers &handlers = *Handlers::get_instance();
+  handler.set_new_signal( SIGINT  );
+  handler.set_new_action( handlers[ Services::SIG_INT ] );
 
-  return a.exec();
+  handler.call_signal();
+
+
+  handler.set_new_signal( SIGABRT );
+
+  handler.set_new_action( []( int signum )
+  {
+    std::cout << "SIGABRT: signum: "
+              << signum
+              << std::endl;
+  });
+
+  handler.call_signal();
+
+  while (1) {}
+
+  return 0;
 }
 
-sighandler_t SignalHandler::getCurAction()
 Signal_handler::Signal_handler(sighandler_t cur_action_, Signum sign_ ) :
   _old_action( nullptr ),
   _cur_action( cur_action_ ),
   _signal( sign_ ) { }
 
+sighandler_t Signal_handler::call_signal()
 {
-  return cur_action;
+  if( _cur_action == nullptr )
+  {
+    std::cerr << "ERROR: cur action wasn't setted!" << std::endl;
+    return _cur_action;
+  }
+  return signal( _signal, _cur_action );
 }
 
-sighandler_t SignalHandler::getOldAction()
+sighandler_t Signal_handler::get_current_action()
 {
-  return old_action;
+  return _cur_action;
 }
 
-sighandler_t SignalHandler::setNewAction(sighandler_t action)
+sighandler_t Signal_handler::get_old_action()
 {
-  old_action = cur_action;
-  return cur_action = action;
+  if( _old_action == nullptr )
+    std::cerr << "action is setted in first time. Isn't old action"
+              << std::endl;
+  return _old_action;
 }
 
-Signum SignalHandler::setNewSignal(Signum signum_)
+sighandler_t Signal_handler::set_new_action( sighandler_t action_ )
 {
+  _old_action = _cur_action;
+  return _cur_action = action_;
+}
 
+Signum Signal_handler::set_new_signal( Signum signum_ )
+{
+  return _signal = signum_;
+}
+
+Signum Signal_handler::get_signal()
+{
+  return _signal;
 }
 
 
