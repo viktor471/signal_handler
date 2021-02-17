@@ -9,7 +9,9 @@ typedef void (*Handler)( int signum );
 int a;
 
 namespace Services {
-  enum HandlerNumber
+
+  typedef QString SigName ;
+  enum Handler_number
   {
     SIG_INT = SIGINT,
     SIG_FPE = SIGFPE,
