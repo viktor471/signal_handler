@@ -17,15 +17,15 @@ namespace Services {
     SIG_FPE = SIGFPE,
   };
 
-  typedef QString SigName ;
-  void show() {};
-QMap< HandlerNumber, SigName > _sig_names;
-QMap< HandlerNumber, Handler > _handlers;
+  typedef QMap< Handler_number, SigName > SigNames_map;
+  SigNames_map _sig_names;
+
 }
 class Handlers{
 
-//QMap< HandlerNumber,
-Handlers(){
+  typedef QMap< Services::Handler_number, Handler > Handlers_map;
+  Handlers_map _handlers;
+
     using namespace Services;
 
     _sig_names.insert( SIG_INT, "SIGINT" );
