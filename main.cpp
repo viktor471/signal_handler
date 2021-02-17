@@ -20,6 +20,11 @@ namespace Services {
   typedef QMap< Handler_number, SigName > SigNames_map;
   SigNames_map _sig_names;
 
+  Handler_number get_signal_number( Signum signum_ )
+  {
+    return static_cast< Handler_number >( signum_ );
+  }
+
 }
 class Handlers{
 
